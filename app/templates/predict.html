@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div class="row justify-content-md-center mb-4">
+        <h3 class='text-primary'>Prediksi Ulasan : {{ prediction }}</h3>
+    </div>
+
+    <!-- <div class="row justify-content-md-center">
+        <div class="thumbnail">
+            {% if prediction[0] == "Ya" %}
+                <img src="{{url_for('static', filename='images/yes.jpg')}}" class="img-thumbnail" />
+            {% endif %}
+        </div>
+    </div>
+        
+    <div class="row justify-content-md-center">
+        <div class="thumbnail">
+            {% if prediction[0] == "Tidak" %}
+                <img src="{{url_for('static', filename='images/no.jpg')}}" class="img-thumbnail" />
+            {% endif %}
+        </div>
+    </div> -->
+    <br>
+    <div align="center">
+        <a href="javascript:history.back()"><img src="{{url_for('static', filename='images/back.png')}}"/></a>
+        <p><b>Back</b></p>
+    </div>
+
+{% endblock %}

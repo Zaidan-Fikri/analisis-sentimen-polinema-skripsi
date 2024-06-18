@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row mt-3">
+  <div class="col-lg-4 col-12">
+    <!-- small card -->
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3>{{ label_counts['positif'] }}</h3>
+
+        <p>Data Ulasan Positif</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-comments"></i>
+        <!-- <i class="fas fa-shopping-cart"></i> -->
+      </div>
+      <!-- <a href="#" class="small-box-footer">
+        More info <i class="fas fa-arrow-circle-right"></i>
+      </a> -->
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-4 col-12">
+    <!-- small card -->
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3>{{ label_counts['netral'] }}<sup style="font-size: 20px"></sup></h3>
+
+        <p>Data Ulasan Netral</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-comments"></i>
+        <!-- <i class="ion ion-stats-bars"></i> -->
+      </div>
+      <!-- <a href="#" class="small-box-footer">
+        More info <i class="fas fa-arrow-circle-right"></i>
+      </a> -->
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-4 col-12">
+    <!-- small card -->
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3>{{ label_counts['negatif'] }}</h3>
+
+        <p>Data Ulasan Negatif</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-comments"></i>
+        <!-- <i class="fas fa-chart-pie"></i> -->
+      </div>
+      <!-- <a href="#" class="small-box-footer">
+        More info <i class="fas fa-arrow-circle-right"></i>
+      </a> -->
+    </div>
+  </div>
+  <!-- ./col -->
+</div>
+<div class="card" style="margin-top: 20px;">
+    <div class="card-header">
+      <h3 class="card-title">Data Ulasan</h3>
+
+      <div class="card-tools">
+        <form action="/data-ulasan" method="post" class="form-inline">
+            <div class="form-group mr-2">
+                <select class="form-control" id="option" name="option">
+                    <option value="all">All</option>
+                    <option value="positif">Positif</option>
+                    <option value="negatif">Negatif</option>
+                    <option value="netral">Netral</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+    </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body table-responsive p-0" style="height: 400px;">
+      <table class="table table-head-fixed text-nowrap">
+        <thead>
+          <tr>
+            <!-- <th>No</th> -->
+            <th>Ulasan</th>
+            <th>Label</th>
+            <th>Predicted Label</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for datas in data %}
+          <tr>
+            <!-- <td>{{ datas.id }}</td> -->
+            <td>{{ datas.ulasan }}</td>
+            <td>{{ datas.label }}</td>
+            <td>{{ datas.predicted_label }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+{% endblock %}
