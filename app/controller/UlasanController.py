@@ -6,7 +6,8 @@ from flask import jsonify, render_template, request
 
 def index():
     try:
-        filter_type = request.form.get('option', 'all')
+        filter_type = request.args.get('option', 'all')
+        print(filter_type)
         
         ulasan = filter(filter_type)
         data = formatarray(ulasan)  # Assuming formatarray is a function to format ulasan data

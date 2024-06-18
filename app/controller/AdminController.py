@@ -1,8 +1,8 @@
 import datetime
 from app.model.admin import Admin
 from app import response, app, db
-from flask import redirect, render_template, request
-from flask_jwt_extended import create_access_token, create_refresh_token, unset_jwt_cookies
+from flask import make_response, redirect, render_template, request, url_for
+from flask_jwt_extended import create_access_token, create_refresh_token, unset_jwt_cookies, set_access_cookies
 
 def index():
     return render_template('login.html')
@@ -50,10 +50,14 @@ def store():
         expires = datetime.timedelta(days=7)
         expires_refresh = datetime.timedelta(days=7)
 
-        access_token = create_access_token(data, fresh=True, expires_delta=expires)
-        refresh_token = create_refresh_token(data, expires_delta=expires_refresh)
+        # access_token = create_access_token(identity=data, fresh=True, expires_delta=expires)
+        # refresh_token = create_refresh_token(data, expires_delta=expires_refresh)
 
-        return redirect('/data-ulasan')
+        response_login = redirect('/data-ulasan')
+        access_token = create_access_token(identity=email)
+        set_access_cookies(response_login, access_token)
+        return response_login
+        # return redirect('/data-ulasan')
         # return response.success({
         #     "data" : data,
         #     "access_token" : access_token,
@@ -65,10 +69,9 @@ def store():
 
 def logout():
     try:
-        # Unset JWT cookies to logout the user
-        unset_jwt_cookies(response=redirect('/login'))
-        
-        return redirect('/login')
+        response = redirect(url_for("login"))
+        unset_jwt_cookies(response)
+        return response
     except Exception as e:
         print(e)
         return response.success(str(e), 'Failed to logout')
