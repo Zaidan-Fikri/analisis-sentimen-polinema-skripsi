@@ -1,7 +1,7 @@
 import datetime
 from app.model.admin import Admin
 from app import response, app, db
-from flask import make_response, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_jwt_extended import create_access_token, create_refresh_token, unset_jwt_cookies, set_access_cookies
 
 def index():
@@ -40,15 +40,17 @@ def store():
         admin = Admin.query.filter_by(email=email).first()
 
         if not admin:
-            return response.badRequest([], 'email tidak terdaftar')
+            flash('Email tidak terdaftar', 'error')
+            return redirect('/login')
         
         if not admin.checkPassword(password):
-            return response.badRequest([], 'password salah')
+            flash('Password salah', 'error')
+            return redirect('/login')
         
-        data = singleObject(admin)
+        # data = singleObject(admin)
         
-        expires = datetime.timedelta(days=7)
-        expires_refresh = datetime.timedelta(days=7)
+        # expires = datetime.timedelta(days=7)
+        # expires_refresh = datetime.timedelta(days=7)
 
         # access_token = create_access_token(identity=data, fresh=True, expires_delta=expires)
         # refresh_token = create_refresh_token(data, expires_delta=expires_refresh)
@@ -57,15 +59,10 @@ def store():
         access_token = create_access_token(identity=email)
         set_access_cookies(response_login, access_token)
         return response_login
-        # return redirect('/data-ulasan')
-        # return response.success({
-        #     "data" : data,
-        #     "access_token" : access_token,
-        #     "refresh_token" : refresh_token
-        # }, "success login")
     except Exception as e:
         print(e)
-        return response.success(str(e), 'gagal login')
+        flash('Gagal login: ' + str(e), 'error')
+        return redirect('/login')
 
 def logout():
     try:

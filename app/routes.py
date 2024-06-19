@@ -1,9 +1,8 @@
-from flask import jsonify, redirect, request, render_template
+from flask import jsonify, redirect, request, render_template, url_for
 from app import app, response
 from app.controller import UlasanController, AdminController
-from flask_jwt_extended import unset_jwt_cookies, get_jwt_identity, jwt_required
-
-# csrf = CSRFProtect(app)
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended.exceptions import NoAuthorizationError, InvalidHeaderError
 
 @app.route('/')
 def inputUlasan():
@@ -17,8 +16,6 @@ def login():
         return AdminController.store()
     else:
         return 'Method not allowed'
-
-# csrf.exempt(login)
 
 @app.route('/ulasan', methods=['POST'])
 def ulasans():
@@ -47,17 +44,6 @@ def dataUlasan():
     else:
         return jsonify({'error': 'Method not allowed'}), 405
 
-
-# @app.route('/data-ulasan-filter', methods=['GET'])
-# @jwt_required()
-# def dataUlasanFilter():
-#     if request.method == 'GET':
-#         return UlasanController.index()
-#     else:
-#         return jsonify({'error': 'Method not allowed'}), 405  
-
-# csrf.exempt(dataUlasan)
-
 @app.route('/logout', methods=['GET'])
 def logout():
     try:
@@ -66,4 +52,7 @@ def logout():
         print(e)
         return response.success(str(e), 'Failed to logout')
 
-
+@app.errorhandler(NoAuthorizationError)
+@app.errorhandler(InvalidHeaderError)
+def handle_auth_error(e):
+    return redirect(url_for('login'))
